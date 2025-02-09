@@ -8,7 +8,7 @@ load_dotenv()
 
 # Configure APIs
 configure(api_key=os.environ["GEMINI_API_KEY"])
-REPLICATE_KEY = os.environ["REPLICATE_KEY"]
+STABILITY_KEY = os.environ["STABILITY_KEY"]
 IG_USERNAME = os.environ["INSTAGRAM_USERNAME"]
 IG_PASSWORD = os.environ["INSTAGRAM_PASSWORD"]
 
@@ -24,10 +24,10 @@ def generate_caption():
     response = model.generate_content(prompt)
     return response.text
 
-# Generate image using Replicate
+# Generate image
 def generate_image(caption):
     try:
-        API_KEY = os.environ["REPLICATE_KEY"]
+        API_KEY = os.environ["STABILITY_KEY"]
         url = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
         
         headers = {
