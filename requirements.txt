@@ -1,4 +1,5 @@
 requests
 google-generativeai
 instagrapi
+pillow
 python-dotenv
