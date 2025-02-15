@@ -3,3 +3,4 @@ google-generativeai
 instagrapi
 pillow
 python-dotenv
+huggingface_hub

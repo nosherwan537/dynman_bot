@@ -2,15 +2,17 @@ import os
 import requests
 from google.generativeai import GenerativeModel, configure
 from instagrapi import Client
+from huggingface_hub import InferenceClient
 import time
+from io import BytesIO
 from dotenv import load_dotenv
 load_dotenv() 
 
 # Configure APIs
 configure(api_key=os.environ["GEMINI_API_KEY"])
-STABILITY_KEY = os.environ["STABILITY_KEY"]
 IG_USERNAME = os.environ["INSTAGRAM_USERNAME"]
 IG_PASSWORD = os.environ["INSTAGRAM_PASSWORD"]
+HF_TOKEN = os.environ["HF_TOKEN"]
 
 # Generate caption using Gemini
 def generate_caption():
@@ -24,34 +26,27 @@ def generate_caption():
     response = model.generate_content(prompt)
     return response.text
 
-# Generate image
 def generate_image(caption):
     try:
-        API_KEY = os.environ["STABILITY_KEY"]
-        url = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
+        client = InferenceClient(token=HF_TOKEN)
+        image = client.text_to_image(
+            f"Professional Instagram influencer photo, {caption}, square aspect ratio",
+            model="stabilityai/stable-diffusion-xl-base-1.0"
+        )
         
-        headers = {
-            "Authorization": f"Bearer {API_KEY}",
-            "Accept": "image/*"
-        }
-
-        data = {
-            "prompt": f"professional instagram influencer photo, {caption}",
-            "output_format": "jpeg",
-            "aspect_ratio": "1:1"
-        }
-
-        response = requests.post(url, headers=headers, files={"none": ''}, data=data)
-        response.raise_for_status()
+        # Convert PIL Image to bytes
+        img_byte_arr = BytesIO()
+        image.save(img_byte_arr, format='JPEG')
+        img_byte_arr = img_byte_arr.getvalue()
         
         # Save image
         with open("post.jpg", "wb") as f:
-            f.write(response.content)
+            f.write(img_byte_arr)
             
-        return "post.jpg"  # Return local file path
+        return "post.jpg"
 
     except Exception as e:
-        print(f"Free image error: {str(e)}")
+        print(f"Image processing error: {str(e)}")
         return None
         
 # Post to Instagram
