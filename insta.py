@@ -16,7 +16,7 @@ HF_TOKEN = os.environ["HF_TOKEN"]
 
 # Generate caption using Gemini
 def generate_caption():
-    model = GenerativeModel('gemini-pro')
+    model = GenerativeModel('gemini-1.5-pro')
     prompt = """Create Instagram caption for Dynman - cowboy AI artist. Use:
     - 2-3 cowboy metaphors
     - 1 AI art term (neural networks, GANs, etc)
